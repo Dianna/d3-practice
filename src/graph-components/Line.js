@@ -9,7 +9,15 @@ import { Button } from "react-bootstrap";
 class LineGraph extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLine: true };
+    this.state = {
+      isLine: true,
+      dataSets: props.dataSets,
+      xDomain: props.xDomain,
+      yDomain: props.yDomain,
+      width: props.width,
+      height: props.height,
+      margin: props.margin
+    };
   }
 
   componentDidMount() {
@@ -17,11 +25,12 @@ class LineGraph extends Component {
   }
 
   drawLineGraph = () => {
-    const { dataSets, xDomain, yDomain, width, height, margin } = this.props;
+    const { dataSets, xDomain, yDomain, width, height, margin } = this.state;
     const axisLength = width - 2 * margin;
 
     const svgContainer = select(".js-line-graph")
       .append("svg")
+      .classed("line-graph", true)
       .attr("width", width)
       .attr("height", height)
       .style("border", "1px solid");
@@ -34,15 +43,24 @@ class LineGraph extends Component {
       .domain(yDomain)
       .range([0, axisLength]);
 
-    this.drawAxes(svgContainer, xScale, yScale, height, margin);
-
-    for (let i = 0; i < dataSets.length; i++) {
-      const { data, color } = dataSets[i];
-      this.drawLine(svgContainer, xScale, yScale, margin, data, color);
-    }
+    this.setState(
+      prevState => ({
+        ...prevState,
+        xScale: xScale,
+        yScale: yScale
+      }),
+      () => {
+        this.drawAxes(svgContainer);
+        for (let i = 0; i < dataSets.length; i++) {
+          const { data, color } = dataSets[i];
+          this.drawLine(svgContainer, data, color);
+        }
+      }
+    );
   };
 
-  drawAxes = (svgContainer, xScale, yScale, height, margin) => {
+  drawAxes = svgContainer => {
+    const { xScale, yScale, height, margin } = this.state;
     const xAxis = axisBottom(xScale);
     const yAxis = axisLeft(yScale);
 
@@ -63,8 +81,9 @@ class LineGraph extends Component {
       .call(yAxis);
   };
 
-  drawLine = (svgContainer, xScale, yScale, margin, data, color) => {
-    const curve = this.state.isLine ? "cardinal" : "linear";
+  drawLine = (svgContainer, data, color) => {
+    const { xScale, yScale, margin } = this.state;
+    const curve = this.state.isLine ? shape.curveLinear : shape.curveCardinal;
 
     const line = shape
       .line()
@@ -73,7 +92,8 @@ class LineGraph extends Component {
       })
       .y(function(d) {
         return yScale(d.y);
-      });
+      })
+      .curve(curve);
 
     svgContainer
       .append("path")
@@ -87,12 +107,23 @@ class LineGraph extends Component {
   };
 
   interpolate = () => {
-    this.setState(prevState => ({
-      ...prevState,
-      isLine: !prevState.isLine
-    }));
+    const { dataSets } = this.state;
+    const svgContainer = select(".line-graph");
 
     selectAll(".line.shape").remove();
+
+    this.setState(
+      prevState => ({
+        ...prevState,
+        isLine: !prevState.isLine
+      }),
+      () => {
+        for (let i = 0; i < dataSets.length; i++) {
+          const { data, color } = dataSets[i];
+          this.drawLine(svgContainer, data, color);
+        }
+      }
+    );
   };
 
   render() {
