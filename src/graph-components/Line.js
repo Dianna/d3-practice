@@ -7,16 +7,31 @@ import { axisBottom, axisLeft } from "d3-axis";
 
 class LineGraph extends Component {
   componentDidMount() {
-    this.drawGraph();
+    this.drawInitialGraph();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.isLineCardinal !== this.props.isLineCardinal) {
-      this.interpolateCurve();
+  componentDidUpdate(prevProps) {
+    const curveChange = prevProps.isLineCardinal !== this.props.isLineCardinal;
+    const areaChange = prevProps.isAreaShown !== this.props.isAreaShown;
+
+    if (curveChange || areaChange) {
+      const { dataSets } = this.props;
+      const svgContainer = select(".line-graph");
+
+      this.removeData();
+
+      for (let i = 0; i < dataSets.length; i++) {
+        const { data, color } = dataSets[i];
+        if (this.props.isAreaShown) {
+          this.drawArea(svgContainer, data, color);
+        } else {
+          this.drawLine(svgContainer, data, color);
+        }
+      }
     }
   }
 
-  drawGraph = () => {
+  drawInitialGraph = () => {
     const { dataSets } = this.props;
     // Create SVG container for graph
     const svgContainer = this.createSvgContainer();
@@ -117,17 +132,38 @@ class LineGraph extends Component {
       });
   };
 
-  // Redraw data representation with alternate curve factory
-  interpolateCurve = () => {
-    const { dataSets } = this.props;
-    const svgContainer = select(".line-graph");
+  drawArea = (svgContainer, data, color) => {
+    const { xScale, yScale } = this.state;
+    const { margin, isLineCardinal } = this.props;
+    const curve = isLineCardinal ? shape.curveCardinal : shape.curveLinear;
 
+    const area = shape
+      .area()
+      .x(function(d) {
+        return xScale(d.x);
+      })
+      .y0(function() {
+        return yScale(0);
+      })
+      .y1(function(d) {
+        return yScale(d.y);
+      })
+      .curve(curve);
+
+    svgContainer
+      .append("path")
+      .classed("area shape", true)
+      .attr("d", area(data))
+      .attr("fill", color)
+      .attr("stroke", color)
+      .attr("transform", function() {
+        return `translate(${margin}, ${margin})`;
+      });
+  };
+
+  removeData = () => {
     selectAll(".line.shape").remove();
-
-    for (let i = 0; i < dataSets.length; i++) {
-      const { data, color } = dataSets[i];
-      this.drawLine(svgContainer, data, color);
-    }
+    selectAll(".area.shape").remove();
   };
 
   render() {

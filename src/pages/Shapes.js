@@ -15,7 +15,8 @@ class Shapes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLineCardinal: false
+      isLineCardinal: false,
+      isAreaShown: false
     };
   }
 
@@ -25,7 +26,15 @@ class Shapes extends Component {
     }));
   };
 
+  interpolateArea = () => {
+    this.setState(prevState => ({
+      isAreaShown: !prevState.isAreaShown
+    }));
+  };
+
   render() {
+    const { isLineCardinal, isAreaShown } = this.state;
+
     return (
       <Grid>
         <CenteredRow>
@@ -36,11 +45,15 @@ class Shapes extends Component {
             margin={25}
             xDomain={[0, 10]}
             yDomain={[10, 0]}
-            isLineCardinal={this.state.isLineCardinal}
+            isLineCardinal={isLineCardinal}
+            isAreaShown={isAreaShown}
           />
           <ButtonToolbar>
             <Button onClick={this.interpolateLine}>
-              {this.state.isLineCardinal ? "Cardinal" : "Line"}
+              {isLineCardinal ? "Cardinal" : "Line"}
+            </Button>
+            <Button onClick={this.interpolateArea}>
+              {isAreaShown ? "Hide Area" : "Show Area"}
             </Button>
           </ButtonToolbar>
         </CenteredRow>
