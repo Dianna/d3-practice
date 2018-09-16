@@ -4,17 +4,19 @@ import { select, selectAll } from "d3-selection";
 import * as shape from "d3-shape";
 import { scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
-import { Button } from "react-bootstrap";
 
 class LineGraph extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLine: true
-    };
+  componentDidMount() {
+    this.drawGraph();
   }
 
-  componentDidMount() {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.isLineCardinal !== this.props.isLineCardinal) {
+      this.interpolateCurve();
+    }
+  }
+
+  drawGraph = () => {
     const { dataSets } = this.props;
     // Create SVG container for graph
     const svgContainer = this.createSvgContainer();
@@ -22,8 +24,7 @@ class LineGraph extends Component {
     const { xScale, yScale } = this.drawAxes(svgContainer);
     // Save x- and y-scale of axes then graph data
     this.setState(
-      prevState => ({
-        ...prevState,
+      () => ({
         xScale,
         yScale
       }),
@@ -34,7 +35,7 @@ class LineGraph extends Component {
         }
       }
     );
-  }
+  };
 
   // Appends svg container to .js-line-graph
   createSvgContainer = () => {
@@ -92,8 +93,8 @@ class LineGraph extends Component {
   // Requires svgContainer append to, data, and color for style
   drawLine = (svgContainer, data, color) => {
     const { xScale, yScale } = this.state;
-    const { margin } = this.props;
-    const curve = this.state.isLine ? shape.curveLinear : shape.curveCardinal;
+    const { margin, isLineCardinal } = this.props;
+    const curve = isLineCardinal ? shape.curveCardinal : shape.curveLinear;
 
     const line = shape
       .line()
@@ -117,35 +118,20 @@ class LineGraph extends Component {
   };
 
   // Redraw data representation with alternate curve factory
-  interpolate = () => {
+  interpolateCurve = () => {
     const { dataSets } = this.props;
     const svgContainer = select(".line-graph");
 
     selectAll(".line.shape").remove();
 
-    this.setState(
-      prevState => ({
-        ...prevState,
-        isLine: !prevState.isLine
-      }),
-      () => {
-        for (let i = 0; i < dataSets.length; i++) {
-          const { data, color } = dataSets[i];
-          this.drawLine(svgContainer, data, color);
-        }
-      }
-    );
+    for (let i = 0; i < dataSets.length; i++) {
+      const { data, color } = dataSets[i];
+      this.drawLine(svgContainer, data, color);
+    }
   };
 
   render() {
-    return (
-      <div>
-        <div className="js-line-graph" />
-        <Button onClick={this.interpolate}>
-          {this.state.isLine ? "Cardinal" : "Line"}
-        </Button>
-      </div>
-    );
+    return <div className="js-line-graph" />;
   }
 }
 

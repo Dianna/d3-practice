@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import LineGraph from "../graph-components/Line";
 import { Grid } from "react-bootstrap";
 import CenteredRow from "../style-components/Centered-Row";
+import { ButtonToolbar, Button } from "react-bootstrap";
 
 import { line1, line2 } from "../data";
 
@@ -11,6 +12,19 @@ const dataSets = [
 ];
 
 class Shapes extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLineCardinal: false
+    };
+  }
+
+  interpolateLine = () => {
+    this.setState(prevState => ({
+      isLineCardinal: !prevState.isLineCardinal
+    }));
+  };
+
   render() {
     return (
       <Grid>
@@ -22,7 +36,13 @@ class Shapes extends Component {
             margin={25}
             xDomain={[0, 10]}
             yDomain={[10, 0]}
+            isLineCardinal={this.state.isLineCardinal}
           />
+          <ButtonToolbar>
+            <Button onClick={this.interpolateLine}>
+              {this.state.isLineCardinal ? "Cardinal" : "Line"}
+            </Button>
+          </ButtonToolbar>
         </CenteredRow>
       </Grid>
     );
