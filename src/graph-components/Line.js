@@ -10,24 +10,35 @@ class LineGraph extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLine: true,
-      dataSets: props.dataSets,
-      xDomain: props.xDomain,
-      yDomain: props.yDomain,
-      width: props.width,
-      height: props.height,
-      margin: props.margin
+      isLine: true
     };
   }
 
   componentDidMount() {
-    this.drawLineGraph();
+    const { dataSets } = this.props;
+    // Create SVG container for graph
+    const svgContainer = this.createSvgContainer();
+    // Create Axes
+    const { xScale, yScale } = this.drawAxes(svgContainer);
+    // Save x- and y-scale of axes then graph data
+    this.setState(
+      prevState => ({
+        ...prevState,
+        xScale,
+        yScale
+      }),
+      () => {
+        for (let i = 0; i < dataSets.length; i++) {
+          const { data, color } = dataSets[i];
+          this.drawLine(svgContainer, data, color);
+        }
+      }
+    );
   }
 
-  drawLineGraph = () => {
-    const { dataSets, xDomain, yDomain, width, height, margin } = this.state;
-    const axisLength = width - 2 * margin;
-
+  // Appends svg container to .js-line-graph
+  createSvgContainer = () => {
+    const { width, height } = this.props;
     const svgContainer = select(".js-line-graph")
       .append("svg")
       .classed("line-graph", true)
@@ -35,32 +46,23 @@ class LineGraph extends Component {
       .attr("height", height)
       .style("border", "1px solid");
 
+    return svgContainer;
+  };
+
+  // Calculates xScale and yScale, appends xAxis and yAxis to svgContainer
+  // Requires svgContainer to append axes to
+  // Returns { xScale, yScale }
+  drawAxes = svgContainer => {
+    const { xDomain, yDomain, width, height, margin } = this.props;
+    const axisLength = width - 2 * margin;
+
     const xScale = scaleLinear()
       .domain(xDomain)
       .range([0, axisLength]);
-
     const yScale = scaleLinear()
       .domain(yDomain)
       .range([0, axisLength]);
 
-    this.setState(
-      prevState => ({
-        ...prevState,
-        xScale: xScale,
-        yScale: yScale
-      }),
-      () => {
-        this.drawAxes(svgContainer);
-        for (let i = 0; i < dataSets.length; i++) {
-          const { data, color } = dataSets[i];
-          this.drawLine(svgContainer, data, color);
-        }
-      }
-    );
-  };
-
-  drawAxes = svgContainer => {
-    const { xScale, yScale, height, margin } = this.state;
     const xAxis = axisBottom(xScale);
     const yAxis = axisLeft(yScale);
 
@@ -79,10 +81,18 @@ class LineGraph extends Component {
         return `translate(${margin}, ${margin})`;
       })
       .call(yAxis);
+
+    return {
+      xScale,
+      yScale
+    };
   };
 
+  // Appends data representation to svgContainer
+  // Requires svgContainer append to, data, and color for style
   drawLine = (svgContainer, data, color) => {
-    const { xScale, yScale, margin } = this.state;
+    const { xScale, yScale } = this.state;
+    const { margin } = this.props;
     const curve = this.state.isLine ? shape.curveLinear : shape.curveCardinal;
 
     const line = shape
@@ -106,8 +116,9 @@ class LineGraph extends Component {
       });
   };
 
+  // Redraw data representation with alternate curve factory
   interpolate = () => {
-    const { dataSets } = this.state;
+    const { dataSets } = this.props;
     const svgContainer = select(".line-graph");
 
     selectAll(".line.shape").remove();
