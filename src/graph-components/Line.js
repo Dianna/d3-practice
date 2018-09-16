@@ -1,11 +1,17 @@
 import React, { Component } from "react";
 
-import { select } from "d3-selection";
+import { select, selectAll } from "d3-selection";
 import * as shape from "d3-shape";
 import { scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
+import { Button } from "react-bootstrap";
 
 class LineGraph extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { isLine: true };
+  }
+
   componentDidMount() {
     this.drawLineGraph();
   }
@@ -28,6 +34,15 @@ class LineGraph extends Component {
       .domain(yDomain)
       .range([0, axisLength]);
 
+    this.drawAxes(svgContainer, xScale, yScale, height, margin);
+
+    for (let i = 0; i < dataSets.length; i++) {
+      const { data, color } = dataSets[i];
+      this.drawLine(svgContainer, xScale, yScale, margin, data, color);
+    }
+  };
+
+  drawAxes = (svgContainer, xScale, yScale, height, margin) => {
     const xAxis = axisBottom(xScale);
     const yAxis = axisLeft(yScale);
 
@@ -46,31 +61,49 @@ class LineGraph extends Component {
         return `translate(${margin}, ${margin})`;
       })
       .call(yAxis);
+  };
 
-    for (let i = 0; i < dataSets.length; i++) {
-      const { data, color } = dataSets[i];
-      const line = shape
-        .line()
-        .x(function(d) {
-          return xScale(d.x);
-        })
-        .y(function(d) {
-          return yScale(d.y);
-        });
+  drawLine = (svgContainer, xScale, yScale, margin, data, color) => {
+    const curve = this.state.isLine ? "cardinal" : "linear";
 
-      svgContainer
-        .append("path")
-        .attr("d", line(data))
-        .attr("fill", "none")
-        .attr("stroke", color)
-        .attr("transform", function() {
-          return `translate(${margin}, ${margin})`;
-        });
-    }
+    const line = shape
+      .line()
+      .x(function(d) {
+        return xScale(d.x);
+      })
+      .y(function(d) {
+        return yScale(d.y);
+      });
+
+    svgContainer
+      .append("path")
+      .classed("line shape", true)
+      .attr("d", line(data))
+      .attr("fill", "none")
+      .attr("stroke", color)
+      .attr("transform", function() {
+        return `translate(${margin}, ${margin})`;
+      });
+  };
+
+  interpolate = () => {
+    this.setState(prevState => ({
+      ...prevState,
+      isLine: !prevState.isLine
+    }));
+
+    selectAll(".line.shape").remove();
   };
 
   render() {
-    return <div className="js-line-graph" />;
+    return (
+      <div>
+        <div className="js-line-graph" />
+        <Button onClick={this.interpolate}>
+          {this.state.isLine ? "Cardinal" : "Line"}
+        </Button>
+      </div>
+    );
   }
 }
 
