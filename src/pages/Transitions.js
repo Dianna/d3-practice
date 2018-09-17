@@ -7,12 +7,24 @@ import { easeElastic, easeBack } from "d3-ease";
 import CenteredRow from "../style-components/Centered-Row";
 
 class Transitions extends Component {
-  componentDidMount() {
-    setInterval(this.renderAnimation, 4000);
-    setInterval(this.animateGlob, 4000);
+  constructor(props) {
+    super(props);
+    this.state = {};
   }
 
-  renderAnimation = () => {
+  componentDidMount() {
+    this.setState(() => ({
+      zoomiesAnimation: setInterval(this.animateZoomies, 4000),
+      globAnimation: setInterval(this.animateGlob, 4000)
+    }));
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.zoomiesAnimation);
+    clearInterval(this.state.globAnimation);
+  }
+
+  animateZoomies = () => {
     select(".js-box-1")
       .transition()
       .duration(2000)
