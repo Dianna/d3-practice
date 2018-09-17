@@ -22,7 +22,6 @@ class Transitions extends Component {
       .duration(2000)
       .style("left", "0px")
       .style("background-color", "red");
-
     select(".js-box-2")
       .transition()
       .duration(2000)
@@ -34,7 +33,6 @@ class Transitions extends Component {
       .ease(easeElastic)
       .style("left", "0px")
       .style("background-color", "red");
-
     select(".js-box-3")
       .transition()
       .duration(2000)
@@ -69,18 +67,19 @@ class Transitions extends Component {
   render() {
     return (
       <CenteredRow id="js-grid-space">
+        <h1>Wait for it...</h1>
         <div className="red box transition-element js-box-1" />
         <div
           className="red box transition-element js-box-2"
-          style={{ top: "110px" }}
+          style={{ top: "180px" }}
         />
         <div
           className="red box transition-element js-box-3"
-          style={{ top: "220px" }}
+          style={{ top: "290px" }}
         />
         <div
           className="red box transition-element js-glob"
-          style={{ top: "330px" }}
+          style={{ top: "400px" }}
         />
       </CenteredRow>
     );
