@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Grid } from "react-bootstrap";
 import CenteredRow from "../style-components/Centered-Row";
 import Line from "../components/Line";
+import Arcs from "../components/Arcs";
 
 class Shapes extends Component {
   render() {
@@ -17,6 +18,7 @@ class Shapes extends Component {
             who's code and explanations I modified here
           </h4>
           <Line />
+          <Arcs />
         </CenteredRow>
       </Grid>
     );
