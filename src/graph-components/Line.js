@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import { select, selectAll } from "d3-selection";
+import { select } from "d3-selection";
 import * as shape from "d3-shape";
 import { scaleLinear } from "d3-scale";
 import { axisBottom, axisLeft } from "d3-axis";
@@ -16,7 +16,7 @@ class LineGraph extends Component {
 
     if (curveChange || areaChange) {
       const { dataSets } = this.props;
-      const svgContainer = select(".line-graph");
+      const svgContainer = select(this.refs.lineGraph).select("svg");
 
       this.removeData();
 
@@ -55,7 +55,7 @@ class LineGraph extends Component {
   // Appends svg container to .js-line-graph
   createSvgContainer = () => {
     const { width, height } = this.props;
-    const svgContainer = select(".js-line-graph")
+    const svgContainer = select(this.refs.lineGraph)
       .append("svg")
       .classed("line-graph", true)
       .attr("width", width)
@@ -162,12 +162,16 @@ class LineGraph extends Component {
   };
 
   removeData = () => {
-    selectAll(".line.shape").remove();
-    selectAll(".area.shape").remove();
+    select(this.refs.lineGraph)
+      .selectAll(".line.shape")
+      .remove();
+    select(this.refs.lineGraph)
+      .selectAll(".area.shape")
+      .remove();
   };
 
   render() {
-    return <div className="js-line-graph" />;
+    return <div ref="lineGraph" />;
   }
 }
 

@@ -17,7 +17,7 @@ class ArcGraph extends Component {
   // Appends svg container to .js-line-graph
   createSvgContainer = () => {
     const { width, height } = this.props;
-    const svgContainer = select(".js-arc-graph")
+    const svgContainer = select(this.refs.arcGraph)
       .append("svg")
       .classed("arc-graph", true)
       .attr("width", width)
@@ -61,7 +61,7 @@ class ArcGraph extends Component {
   };
 
   render() {
-    return <div className="js-arc-graph" />;
+    return <div ref="arcGraph" />;
   }
 }
 
