@@ -7,11 +7,6 @@ import { easeElastic, easeBack } from "d3-ease";
 import CenteredRow from "../style-components/Centered-Row";
 
 class Transitions extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
   componentDidMount() {
     this.setState(() => ({
       zoomiesAnimation: setInterval(this.animateZoomies, 4000),
@@ -25,7 +20,7 @@ class Transitions extends Component {
   }
 
   animateZoomies = () => {
-    select(".js-box-1")
+    select(this.refs.box1)
       .transition()
       .duration(2000)
       .style("left", "400px")
@@ -34,7 +29,7 @@ class Transitions extends Component {
       .duration(2000)
       .style("left", "0px")
       .style("background-color", "red");
-    select(".js-box-2")
+    select(this.refs.box2)
       .transition()
       .duration(2000)
       .ease(easeElastic)
@@ -45,7 +40,7 @@ class Transitions extends Component {
       .ease(easeElastic)
       .style("left", "0px")
       .style("background-color", "red");
-    select(".js-box-3")
+    select(this.refs.box3)
       .transition()
       .duration(2000)
       .ease(easeBack)
@@ -59,7 +54,7 @@ class Transitions extends Component {
   };
 
   animateGlob = () => {
-    select(".js-glob")
+    select(this.refs.jsGlob)
       .transition()
       .duration(2000)
       .style("border-radius", "50%")
@@ -78,19 +73,22 @@ class Transitions extends Component {
 
   render() {
     return (
-      <CenteredRow id="js-grid-space">
+      <CenteredRow>
         <h1>Wait for it...</h1>
-        <div className="red box transition-element js-box-1" />
+        <div ref="box1" className="red box transition-element" />
         <div
-          className="red box transition-element js-box-2"
+          ref="box2"
+          className="red box transition-element"
           style={{ top: "180px" }}
         />
         <div
-          className="red box transition-element js-box-3"
+          ref="box3"
+          className="red box transition-element"
           style={{ top: "290px" }}
         />
         <div
-          className="red box transition-element js-glob"
+          ref="jsGlob"
+          className="red box transition-element"
           style={{ top: "400px" }}
         />
       </CenteredRow>
