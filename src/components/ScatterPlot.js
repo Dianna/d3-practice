@@ -38,13 +38,13 @@ export default class ScatterPlotGraph extends Component {
   render() {
     return (
       <div>
-        <h1>Scatter Plot</h1>
-        <h3>
-          Code and explanation adapted from{" "}
+        <h2>Scatter Plot</h2>
+        <h4>
+          Credit: code and explanation adapted from{" "}
           <a href="https://github.com/freddyrangel/playing-with-react-and-d3#how-use-react-and-d3">
             freddyrangel
           </a>
-        </h3>
+        </h4>
         <Chart {...this.state} {...styles} />
         <div className="controls">
           <Button className="btn randomize" onClick={this.randomizeData}>

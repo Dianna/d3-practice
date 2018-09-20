@@ -3,6 +3,7 @@ import { Grid } from "react-bootstrap";
 import CenteredRow from "../style-components/Centered-Row";
 import Line from "../components/Line";
 import Arcs from "../components/Arcs";
+import ScatterPlot from "../components/ScatterPlot";
 
 class Shapes extends Component {
   render() {
@@ -19,6 +20,7 @@ class Shapes extends Component {
           </h4>
           <Line />
           <Arcs />
+          <ScatterPlot />
         </CenteredRow>
       </Grid>
     );

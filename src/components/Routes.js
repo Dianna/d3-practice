@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
 import Shapes from "../pages/Shapes";
-import ScatterPlot from "../pages/ScatterPlot";
 import Transitions from "../pages/Transitions";
 import BasicSvg from "../pages/BasicSvg";
 import GraphAxes from "../pages/GraphAxes";
@@ -21,7 +20,6 @@ function Routes() {
           />
         )}
       />
-      <Route path="/scatter-plot" component={ScatterPlot} />
       <Route path="/shapes" component={Shapes} />
       <Route path="/transitions" component={Transitions} />
       <Route path="/basic-svg" component={BasicSvg} />
