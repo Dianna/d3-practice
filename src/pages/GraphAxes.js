@@ -24,7 +24,7 @@ class GraphAxes extends Component {
   }
 
   renderGraph = () => {
-    const svgContainer = select("#js-grid-space")
+    const svgContainer = select(this.refs.gridSpace)
       .append("svg")
       .attr("width", this.state.width)
       .attr("height", this.state.height)
@@ -97,7 +97,9 @@ class GraphAxes extends Component {
   render() {
     return (
       <Grid>
-        <CenteredRow id="js-grid-space" />
+        <CenteredRow>
+          <div ref="gridSpace" />
+        </CenteredRow>
       </Grid>
     );
   }
