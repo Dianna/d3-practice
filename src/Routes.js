@@ -1,10 +1,11 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-import Shapes from "../pages/Shapes";
-import Transitions from "../pages/Transitions";
-import BasicSvg from "../pages/BasicSvg";
-import GraphAxes from "../pages/GraphAxes";
+import ReactD3 from "./pages/ReactD3";
+import Shapes from "./pages/Shapes";
+import Transitions from "./pages/Transitions";
+import BasicSvg from "./pages/BasicSvg";
+import GraphAxes from "./pages/GraphAxes";
 
 function Routes() {
   return (
@@ -20,6 +21,7 @@ function Routes() {
           />
         )}
       />
+      <Route path="/react-d3" component={ReactD3} />
       <Route path="/shapes" component={Shapes} />
       <Route path="/transitions" component={Transitions} />
       <Route path="/basic-svg" component={BasicSvg} />

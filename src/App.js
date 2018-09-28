@@ -4,8 +4,8 @@ import "./App.css";
 
 import { HashRouter } from "react-router-dom";
 
+import Routes from "./Routes";
 import Navigation from "./components/Navigation";
-import Routes from "./components/Routes";
 
 class App extends Component {
   render() {
