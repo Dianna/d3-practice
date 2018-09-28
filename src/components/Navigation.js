@@ -4,12 +4,35 @@ import { Nav, NavItem } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 function Navigation() {
-  const linkToEventKey = {
-    shapes: "1",
-    transitions: "2",
-    axes: "3",
-    "basic-svg": "4"
-  };
+  const destinations = [
+    {
+      routeName: "react-d3",
+      tabName: "React D3"
+    },
+    {
+      routeName: "shapes",
+      tabName: "Shapes"
+    },
+    {
+      routeName: "transitions",
+      tabName: "Transitions"
+    },
+    {
+      routeName: "axes",
+      tabName: "Axes"
+    },
+    {
+      routeName: "basic-svg",
+      tabName: "Basic SVG"
+    }
+  ];
+
+  const linkToEventKey = destinations.reduce((accumulator, currentVal, i) => {
+    let key = currentVal.routeName;
+    accumulator[`${key}`] = i + 1;
+    return accumulator;
+  }, {});
+
   const currentLocation = window.location.hash.slice(2);
   let activeTab = linkToEventKey[currentLocation];
 
@@ -19,18 +42,11 @@ function Navigation() {
 
   return (
     <Nav bsStyle="tabs" activeKey={activeTab} onSelect={k => handleSelect(k)}>
-      <LinkContainer to="shapes" eventKey="1">
-        <NavItem>Shapes</NavItem>
-      </LinkContainer>
-      <LinkContainer to="transitions" eventKey="2">
-        <NavItem>Transitions</NavItem>
-      </LinkContainer>
-      <LinkContainer to="axes" eventKey="3">
-        <NavItem>Axes</NavItem>
-      </LinkContainer>
-      <LinkContainer to="basic-svg" eventKey="4">
-        <NavItem>Basic SVG</NavItem>
-      </LinkContainer>
+      {destinations.map((val, i) => (
+        <LinkContainer to={val.routeName} eventKey={i + 1} key={i + 1}>
+          <NavItem>{val.tabName}</NavItem>
+        </LinkContainer>
+      ))}
     </Nav>
   );
 }
