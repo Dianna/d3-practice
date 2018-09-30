@@ -6,6 +6,10 @@ import { LinkContainer } from "react-router-bootstrap";
 function Navigation() {
   const destinations = [
     {
+      routeName: "animations",
+      tabName: "Animations"
+    },
+    {
       routeName: "react-d3",
       tabName: "React D3"
     },
