@@ -5,6 +5,7 @@ import { Button, ButtonToolbar } from "react-bootstrap";
 import CenteredRow from "../style-components/Centered-Row";
 import BouncingBall from "../components/BouncingBall";
 import RainbowSnake from "../components/RainbowSnake";
+import Alphabet from "../components/Alphabet";
 
 class Animations extends Component {
   bouncingBallSVGHeight = 550;
@@ -14,7 +15,7 @@ class Animations extends Component {
     super();
 
     this.state = {
-      active: "rainbowSnake"
+      active: "alphabet"
     };
   }
 
@@ -38,9 +39,15 @@ class Animations extends Component {
             </a>{" "}
             who's code and explanations I modified here
           </h4>
-
           <h4>Choose an animation:</h4>
           <ButtonToolbar>
+            <Button
+              onClick={() => {
+                this.chooseActive("alphabet");
+              }}
+            >
+              Alphabet
+            </Button>
             <Button
               onClick={() => {
                 this.chooseActive("rainbowSnake");
@@ -57,7 +64,16 @@ class Animations extends Component {
             </Button>
           </ButtonToolbar>
 
-          {active === "rainbowSnake" ? (
+          {active === "alphabet" && (
+            <div>
+              <h2>Alphabet</h2>
+              <svg width="800" height="600">
+                <Alphabet x="32" y="100" />
+              </svg>
+            </div>
+          )}
+
+          {active === "rainbowSnake" && (
             <div>
               <h2>Rainbow Snake</h2>
               <h4>Trace your cursor across the grid</h4>
@@ -68,7 +84,9 @@ class Animations extends Component {
                 <RainbowSnake sideLength={this.rainbowSnakeSVGSide} />
               </svg>
             </div>
-          ) : (
+          )}
+
+          {active === "bouncingBall" && (
             <div>
               <h2>Bouncing Ball</h2>
               <h4>Wee!</h4>
