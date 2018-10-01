@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Grid } from "react-bootstrap";
+import { Button, ButtonToolbar } from "react-bootstrap";
 
 import CenteredRow from "../style-components/Centered-Row";
 import BouncingBall from "../components/BouncingBall";
@@ -9,7 +10,23 @@ class Animations extends Component {
   bouncingBallSVGHeight = 550;
   rainbowSnakeSVGSide = 600;
 
+  constructor() {
+    super();
+
+    this.state = {
+      active: "rainbowSnake"
+    };
+  }
+
+  chooseActive = active => {
+    this.setState(() => ({
+      active
+    }));
+  };
+
   render() {
+    const { active } = this.state;
+
     return (
       <Grid>
         <CenteredRow>
@@ -22,26 +39,48 @@ class Animations extends Component {
             who's code and explanations I modified here
           </h4>
 
-          {/* TODO: Add buttons so only one animation is happening at a time */}
+          <h4>Choose an animation:</h4>
+          <ButtonToolbar>
+            <Button
+              onClick={() => {
+                this.chooseActive("rainbowSnake");
+              }}
+            >
+              Rainbow Snake
+            </Button>
+            <Button
+              onClick={() => {
+                this.chooseActive("bouncingBall");
+              }}
+            >
+              Bouncing Ball
+            </Button>
+          </ButtonToolbar>
 
-          <h2>Rainbow Snake</h2>
-          <h4>Trace your cursor across the grid</h4>
-          <svg
-            width={this.rainbowSnakeSVGSide}
-            height={this.rainbowSnakeSVGSide}
-          >
-            <RainbowSnake sideLength={this.rainbowSnakeSVGSide} />
-          </svg>
-
-          <h2>Bouncing Ball</h2>
-          <h4>Wee!</h4>
-          <svg width="100%" height={this.bouncingBallSVGHeight}>
-            <BouncingBall
-              x={50}
-              y={this.bouncingBallSVGHeight}
-              svgHeight={this.bouncingBallSVGHeight}
-            />
-          </svg>
+          {active === "rainbowSnake" ? (
+            <div>
+              <h2>Rainbow Snake</h2>
+              <h4>Trace your cursor across the grid</h4>
+              <svg
+                width={this.rainbowSnakeSVGSide}
+                height={this.rainbowSnakeSVGSide}
+              >
+                <RainbowSnake sideLength={this.rainbowSnakeSVGSide} />
+              </svg>
+            </div>
+          ) : (
+            <div>
+              <h2>Bouncing Ball</h2>
+              <h4>Wee!</h4>
+              <svg width="100%" height={this.bouncingBallSVGHeight}>
+                <BouncingBall
+                  x={50}
+                  y={this.bouncingBallSVGHeight}
+                  svgHeight={this.bouncingBallSVGHeight}
+                />
+              </svg>
+            </div>
+          )}
         </CenteredRow>
       </Grid>
     );
