@@ -13,11 +13,7 @@ export default class Dot extends Component {
     maxPosition: PropTypes.number.isRequired
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = { r: 5 };
-  }
+  state = { ...this.props, r: 5 };
 
   // Animates to a larger radius with a color (based on x and y positions) then animates back to the smaller radius and black
   animateDot = () => {
@@ -43,7 +39,7 @@ export default class Dot extends Component {
 
   // Return a color from D3's interpolate warm based on Dot's x and y position
   get color() {
-    const { x, y, maxPosition } = this.props;
+    const { x, y, maxPosition } = this.state;
 
     // t= angle subtended by the circle relative to the grid's center
     const t = scaleLinear()
@@ -56,8 +52,7 @@ export default class Dot extends Component {
   }
 
   render() {
-    const { x, y } = this.props,
-      { r, colorize } = this.state;
+    const { x, y, r, colorize } = this.state;
 
     return (
       <circle
